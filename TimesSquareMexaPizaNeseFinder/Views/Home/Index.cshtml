@@ -1,0 +1,75 @@
+﻿@model PagedList.IPagedList<TimesSquareMexaPizaNeseFinder.Models.BusinessLocation>
+@using PagedList.Mvc;
+<link href="~/Content/Styles/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "HomePage";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Times Square Mexican, Pizza, and Japanese<small><a href="https://data.cityofnewyork.us/Business/resource/7rwn-iw5c" target="_blank"><i>source data</i></a></small></h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Index", "Home", FormMethod.Get))
+        {
+            <p>
+                Filter Name: @Html.TextBox("SearchQuery", ViewBag.CurrentFilter as string)
+                <input type="submit" value="Search" />
+            </p>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <hr class="compact" />
+        <table class="table table-striped table-hover ">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.ActionLink("Company Name", "Index", new { SortOrder = ViewBag.NameSortParm, CurrentFilter = ViewBag.CurrentFilter })
+                    </th>
+                    <th>
+                        @Html.ActionLink("SubIndustry", "Index", new { SortOrder = ViewBag.DBASortParm, CurrentFilter = ViewBag.CurrentFilter })
+                    </th>
+                    <th>
+                        Phone
+                    </th>
+
+                    <th>
+                        @Html.ActionLink("Location", "Index", new { SortOrder = ViewBag.ZipSortParm, CurrentFilter = ViewBag.CurrentFilter })
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+            {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CompanyName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SubIndustry)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Phone)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Location)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <br />
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+        @Html.PagedListPager(Model, CurrentPage => Url.Action("Index", new { CurrentPage, SortOrder = ViewBag.CurrentSort, CurrentFilter = ViewBag.CurrentFilter }))
+
+    </div>
+</div>
